@@ -1,0 +1,41 @@
+{
+  "name": "functional-experiment",
+  "version": "1.0.0",
+  "description": "A set of functional tools to experiment with",
+  "main": "lib/index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "engines": {
+    "node": ">=5.0"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "tape": "^4.4.0",
+    "eslint": "^2.2.0",
+    "tap-difflet": "^0.4.0"
+  },
+  "scripts": {
+    "test": "node --harmony_rest_parameters ./node_modules/.bin/tape tests/*js  | tap-difflet",
+    "lint": "eslint src tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guumaster/functional-javascript-experiment.git"
+  },
+  "keywords": [
+    "fp",
+    "functional",
+    "programming",
+    "functional",
+    "fpjs",
+    "experiment"
+  ],
+  "author": "Guumaster <guuweb@gmail.com> (http://github.com/guumaster)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/guumaster/functional-javascript-experiment/issues"
+  },
+  "homepage": "https://github.com/guumaster/functional-javascript-experiment#readme"
+}
