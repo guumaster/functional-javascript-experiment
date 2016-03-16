@@ -11,6 +11,13 @@ const reduce = require('../lib').reduce;
 const filter = require('../lib').filter;
 const compose = require('../lib').compose;
 const composeAll = require('../lib').composeAll;
+const pipe = require('../lib').pipe;
+const pipeAll = require('../lib').pipeAll;
+const best = require('../lib').best;
+const partition = require('../lib').partition;
+const drop = require('../lib').drop;
+const every = require('../lib').every;
+const any = require('../lib').any;
 
 const id = x => x;
 const simple = [1, 2, 3];
@@ -84,12 +91,17 @@ test('filter: filter odds', assert => {
   assert.end();
 });
 
+test('drop: filter evens', assert => {
+  assert.deepEqual(drop(x => x % 2 === 0, [1, 2, 3, 4]), [1, 3], 'return only odds elements');
+  assert.deepEqual(drop(x => x % 2 !== 0, [1, 2, 3, 4]), [2, 4], 'return only even elements');
+  assert.deepEqual(drop(x => x % 5 === 0, [1, 2, 3, 4]),  [1, 2, 3, 4], 'dont drop any elements');
+  assert.end();
+});
 test('compose', assert => {
   const sum3 = x => x + 3;
   const mult2 = x => x * 2;
   const fg = compose(sum3, mult2);
-  assert.ok(fg(3), 6, 'compose result');
-  assert.ok(fg(3), mult2(sum3(3)), 'compose result');
+  assert.equal(fg(3), sum3(mult2(3)), 'compose two functions');
   assert.end();
 });
 
@@ -99,9 +111,85 @@ test('compose all', assert => {
   const mult5 = x => x * 5;
   const fg = composeAll([sum3, mult2, mult5]);
   const fg2 = composeAll([mult5, mult2, sum3]);
-  assert.ok(fg(3), 15, 'compose result');
-  assert.ok(fg(3), mult5(mult2(sum3(3))), 'compose result');
-  assert.ok(fg2(3), sum3(mult2(mult5(3))), 'compose result');
+  assert.equal(fg(3), sum3(mult2(mult5(3))), 'compose three functions');
+  assert.equal(fg2(3), mult5(mult2(sum3(3))), 'compose three functions in differnt order');
   assert.end();
+});
+
+
+test('pipe', assert => {
+  const sum3 = x => x + 3;
+  const mult2 = x => x * 2;
+  const fg = pipe(sum3, mult2);
+  assert.equal(fg(3), mult2(sum3(3)), 'compose two functions');
+  assert.end();
+});
+
+test('pipe all', assert => {
+  const sum3 = x => x + 3;
+  const mult2 = x => x * 2;
+  const mult5 = x => x * 5;
+  const fg = pipeAll([sum3, mult2, mult5]);
+  const fg2 = pipeAll([mult5, mult2, sum3]);
+  assert.equal(fg(3), mult5(mult2(sum3(3))), 'compose three functions');
+  assert.equal(fg2(3), sum3(mult2(mult5(3))), 'compose three functions in differnt order');
+  assert.end();
+});
+
+test('best number', assert => {
+  const max = 5;
+  const arr = [1,2,3,4,5];
+  const maxFn = (a, b) => a > b;
+
+  assert.equal(best(maxFn, arr), max, 'get the best number');
+  assert.end();
+
+});
+
+
+test('best word', assert => {
+  const max = 'longest';
+  const arr = ['short', 'longest', 'small'];
+  const longestFn = (a, b) => a.length > b.length;
+
+  assert.equal(best(longestFn, arr), max, 'get the longest word');
+  assert.end();
+
+});
+
+test('partition odd', assert => {
+  const arr = [1,2,3,4,5,6];
+  const splitter = item => item % 2 === 0;
+
+  assert.deepEqual(partition(splitter, arr), [[2,4,6], [1,3,5]], 'split odds numbers');
+  assert.end();
+
+});
+
+test('every', assert => {
+  const arr1 = [1,2,3,4,5,6];
+  const arr2 = [-1, 3, 5];
+  const arr3 = [1, 0];
+  const pred = item => item > 0;
+
+  assert.equal(every(pred, arr1), true, 'all elements greater than 0');
+  assert.equal(every(pred, arr2), false, 'not all elements greater than 0');
+  assert.equal(every(pred, arr3), false, 'not all elements greater than 0');
+  assert.end();
+
+});
+
+
+test('any', assert => {
+  const arr1 = [1,2,3,4,5,6];
+  const arr2 = [-1, 3, 5];
+  const arr3 = [1, 0];
+  const pred = item => item < 0;
+
+  assert.equal(any(pred, arr1), false, 'no element less than 0');
+  assert.equal(any(pred, arr2), true, 'no elements less than 0');
+  assert.equal(any(pred, arr3), false, 'not all elements less than 0');
+  assert.end();
+
 });
 

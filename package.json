@@ -7,18 +7,19 @@
     "test": "tests"
   },
   "engines": {
-    "node": ">=5.0"
+    "node": ">=5.8"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
-    "tape": "^4.4.0",
-    "eslint": "^2.2.0",
-    "tap-difflet": "^0.4.0"
+    "eslint": "^2.4.0",
+    "nodemon": "^1.9.1",
+    "tap-spec": "^4.1.1",
+    "tape": "^4.4.0"
   },
   "scripts": {
-    "test": "node --harmony_rest_parameters ./node_modules/.bin/tape tests/*js  | tap-difflet",
-    "lint": "eslint src tests"
+    "test": "node --harmony_rest_parameters ./node_modules/.bin/tape tests/*js  | tap-spec",
+    "lint": "eslint src tests",
+    "watch": "nodemon -q -x 'npm test'"
   },
   "repository": {
     "type": "git",
